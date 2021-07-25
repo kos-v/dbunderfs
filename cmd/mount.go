@@ -71,9 +71,13 @@ func createDBInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
 		return nil, fmt.Errorf("Driver for database \"%s\" not found.\n", dsn.GetScheme())
 	}
 
-	driverDsn := dsn.GetUser() + ":" + dsn.GetPassword() + "@tcp(" + dsn.GetHost() + ")/" + dsn.GetPath()
-	inst := db.MySQLInstance{DSN: driverDsn}
+	protocol := "tcp"
+	if dsn.HasParam("protocol") {
+		protocol = dsn.GetParam("protocol")
+	}
+	driverDsn := dsn.GetUser() + ":" + dsn.GetPassword() + "@" + protocol + "(" + dsn.GetHost() + ")/" + dsn.GetPath()
 
+	inst := db.MySQLInstance{DSN: driverDsn}
 	if _, err := inst.Connect(); err != nil {
 		return nil, err
 	}
