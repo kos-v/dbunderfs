@@ -45,6 +45,7 @@ type DescriptorRepository interface {
 	FindSingleByInode(inode Inode) (DescriptorInterface, error)
 	FindSingleByName(parent Inode, target string) (DescriptorInterface, error)
 	IsExistsByName(parent Inode, name string) (bool, error)
+	RemoveByName(parent Inode, name string) error
 }
 
 type DBFactory interface {

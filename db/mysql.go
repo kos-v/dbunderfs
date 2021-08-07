@@ -246,6 +246,20 @@ func (dr *MySQLDescriptorRepository) IsExistsByName(parent Inode, name string) (
 	return descr != nil, nil
 }
 
+func (dr *MySQLDescriptorRepository) RemoveByName(parent Inode, name string) error {
+	exists, err := dr.IsExistsByName(parent, name)
+	if err != nil {
+		return err
+	}
+
+	if exists == false {
+		return fmt.Errorf("Node %s was not found in parent %d", name, parent)
+	}
+
+	_, err = dr.instance.GetPool().Exec("DELETE FROM descriptors WHERE parent = ?  AND name = ?", parent, name)
+	return err
+}
+
 func (dr *MySQLDescriptorRepository) hydrateDescriptor(row interface{}) (DescriptorInterface, error) {
 	descr := Descriptor{}
 

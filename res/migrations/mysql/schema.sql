@@ -32,7 +32,9 @@ CREATE TABLE IF NOT EXISTS `descriptors`
     `gid`        int(11) unsigned    NOT NULL,
     `fast_block` longblob,
     PRIMARY KEY (`inode`),
-    UNIQUE KEY `parent-name_uniq` (`parent`, `name`)
+    UNIQUE KEY `parent-name_uniq` (`parent`, `name`),
+    CONSTRAINT `FK--descriptors-parent--descriptors-inode` FOREIGN KEY (`parent`) REFERENCES `descriptors` (`inode`)
+        ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 

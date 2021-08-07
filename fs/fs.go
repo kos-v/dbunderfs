@@ -222,6 +222,15 @@ func (d *Dir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.Cr
 	return &file, &file, nil
 }
 
+var _ = fuseFS.NodeRemover(&Dir{})
+
+func (d *Dir) Remove(ctx context.Context, req *fuse.RemoveRequest) error {
+	log.Infof("Removing entry %s in %s[%d]", req.Name, d.descriptor.GetName(), d.descriptor.GetInode())
+
+	repo := d.fs.DBFactory.CreateDescriptorRepository()
+	return repo.RemoveByName(d.descriptor.GetInode(), req.Name)
+}
+
 type File struct {
 	descriptor db.DescriptorInterface
 	fs         *FS
