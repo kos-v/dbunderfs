@@ -52,6 +52,7 @@ type DescriptorInterface interface {
 	GetType() DescriptorType
 	GetUID() uint32
 	GetGID() uint32
+	IsRoot() bool
 }
 
 type DescriptorAttrs struct {
@@ -105,4 +106,9 @@ func (d *Descriptor) GetUID() uint32 {
 
 func (d *Descriptor) GetGID() uint32 {
 	return d.GID
+}
+
+func (d *Descriptor) IsRoot() bool {
+	val, _ := d.Parent.Value()
+	return val == nil
 }
