@@ -21,11 +21,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var binary string
+var build string
+var buildDatetime string
+var version string
+
 func RootCommand() *cobra.Command {
+	version = version + ", build " + build + " from " + buildDatetime
 	command := &cobra.Command{
-		Use:              "dbfs",
+		Use:              binary,
 		Short:            "DbunderFS",
-		Version:          "0.0.1-dev",
+		Version:          version,
 		TraverseChildren: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {

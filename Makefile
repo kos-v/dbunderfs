@@ -1,5 +1,14 @@
+
+PACKAGE="github.com/kos-v/dbunderfs"
+BINARY=dbfs
+VERSION=`git describe --abbrev=0`
+BUILD=`git rev-parse --short=8 HEAD`
+BUILD_DATETIME=`date +%FT%H:%M:%S`
+
+LDFLAGS=-ldflags "-w -s -X ${PACKAGE}/cmd.binary=${BINARY} -X ${PACKAGE}/cmd.version=${VERSION} -X ${PACKAGE}/cmd.build=${BUILD} -X ${PACKAGE}/cmd.buildDatetime=${BUILD_DATETIME}"
+
 build: clean
-	go build -o dbfs main.go
+	go build ${LDFLAGS} -o ${BINARY} main.go
 
 clean:
-	rm -f ./dbfs
+	rm -f ./${BINARY}
