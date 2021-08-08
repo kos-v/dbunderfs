@@ -1,4 +1,3 @@
-
 PACKAGE="github.com/kos-v/dbunderfs"
 BINARY=dbfs
 VERSION=`git describe --abbrev=0`
