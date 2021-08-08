@@ -21,17 +21,35 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var binary string
-var build string
-var buildDatetime string
-var version string
+type buildVersionInfo struct {
+	build         string
+	buildDatetime string
+	release       string
+}
+
+type buildInfo struct {
+	binary  string
+	version buildVersionInfo
+}
+
+func (i *buildInfo) GetSummary() string {
+	return i.version.release + ", build " + i.version.build + " from " + i.version.buildDatetime
+}
 
 func RootCommand() *cobra.Command {
-	version = version + ", build " + build + " from " + buildDatetime
+	bi := buildInfo{
+		binary: binary,
+		version: buildVersionInfo{
+			build:         build,
+			buildDatetime: buildDatetime,
+			release:       release,
+		},
+	}
+
 	command := &cobra.Command{
-		Use:              binary,
+		Use:              bi.binary,
 		Short:            "DbunderFS",
-		Version:          version,
+		Version:          bi.GetSummary(),
 		TraverseChildren: true,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if len(args) == 0 {
