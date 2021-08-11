@@ -5,16 +5,16 @@ BUILD=`git rev-parse --short=8 HEAD`
 BUILD_DATETIME=`date +%FT%H:%M:%S`
 
 LDFLAGS=-w -s \
-	-X ${PACKAGE}/cmd.binary=${BINARY} \
-	-X ${PACKAGE}/cmd.release=${RELEASE} \
-	-X ${PACKAGE}/cmd.build=${BUILD} \
-	-X ${PACKAGE}/cmd.buildDatetime=${BUILD_DATETIME}
+	-X ${PACKAGE}/cmd.fBinary=${BINARY} \
+	-X ${PACKAGE}/cmd.fRelease=${RELEASE} \
+	-X ${PACKAGE}/cmd.fBuild=${BUILD} \
+	-X ${PACKAGE}/cmd.fBuildDatetime=${BUILD_DATETIME}
 
 build: clean
-	go build -ldflags "${LDFLAGS} -X ${PACKAGE}/cmd.debug=false" -o ${BINARY} main.go
+	go build -ldflags "${LDFLAGS} -X ${PACKAGE}/cmd.fDebug=false" -o ${BINARY} main.go
 
 build_debug: clean
-	go build -ldflags "${LDFLAGS} -X ${PACKAGE}/cmd.debug=true" -o ${BINARY} main.go
+	go build -ldflags "${LDFLAGS} -X ${PACKAGE}/cmd.fDebug=true" -o ${BINARY} main.go
 
 clean:
 	rm -f ./${BINARY}

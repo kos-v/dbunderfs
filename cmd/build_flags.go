@@ -1,8 +1,8 @@
 package cmd
 
 // ldflags
-var binary string
-var debug string
-var build string
-var buildDatetime string
-var release string
+var fBinary string
+var fDebug string
+var fBuild string
+var fBuildDatetime string
+var fRelease string

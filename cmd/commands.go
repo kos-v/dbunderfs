@@ -43,16 +43,16 @@ func (i *buildInfo) GetSummary() string {
 
 func RootCommand() *cobra.Command {
 	bi := buildInfo{
-		binary: binary,
+		binary: fBinary,
 		debug:  false,
 		version: buildVersionInfo{
-			build:         build,
-			buildDatetime: buildDatetime,
-			release:       release,
+			build:         fBuild,
+			buildDatetime: fBuildDatetime,
+			release:       fRelease,
 		},
 	}
 
-	if debug == "true" {
+	if fDebug == "true" {
 		bi.debug = true
 	}
 
