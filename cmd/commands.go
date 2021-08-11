@@ -29,21 +29,31 @@ type buildVersionInfo struct {
 
 type buildInfo struct {
 	binary  string
+	debug   bool
 	version buildVersionInfo
 }
 
 func (i *buildInfo) GetSummary() string {
-	return i.version.release + ", build " + i.version.build + " from " + i.version.buildDatetime
+	summary := i.version.release + ", build " + i.version.build + " from " + i.version.buildDatetime
+	if i.debug {
+		summary += ", debug"
+	}
+	return summary
 }
 
 func RootCommand() *cobra.Command {
 	bi := buildInfo{
 		binary: binary,
+		debug:  false,
 		version: buildVersionInfo{
 			build:         build,
 			buildDatetime: buildDatetime,
 			release:       release,
 		},
+	}
+
+	if debug == "true" {
+		bi.debug = true
 	}
 
 	command := &cobra.Command{
