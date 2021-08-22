@@ -1,6 +1,5 @@
 language: go
 go:
-  - "1.13"
   - "1.16"
 script:
   - make test_with_cover
