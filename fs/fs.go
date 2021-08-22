@@ -29,7 +29,7 @@ import (
 type RootNotFoundError struct{ err string }
 
 func (err *RootNotFoundError) Error() string {
-	return fmt.Sprintln("Root \"%s\" not found.", err.err)
+	return fmt.Sprintf("Root \"%s\" not found.", err.err)
 }
 
 func Mount(point string, dbFactory db.DBFactory) error {
