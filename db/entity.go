@@ -20,6 +20,7 @@ import (
 	"database/sql"
 	"io/fs"
 	"strconv"
+	"sync"
 )
 
 type Inode uint64
@@ -32,15 +33,38 @@ const (
 )
 
 type DataBlockNodeInterface interface {
+	Add(offset uint64, newData *[]byte) int
 	GetData() *[]byte
 }
 
 type DataBlockNode struct {
-	data *[]byte
+	mu   sync.Mutex
+	data []byte
+}
+
+func (d *DataBlockNode) Add(offset uint64, newData *[]byte) int {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	if int(offset) > len(d.data) {
+		offset = uint64(len(d.data))
+	}
+
+	newLen := len(d.data) + len(*newData) - (len(d.data) - int(offset))
+	data := make([]byte, newLen)
+	copy(data, d.data)
+
+	addedLen := copy(data[offset:], *newData)
+	d.data = data
+
+	return addedLen
 }
 
 func (d *DataBlockNode) GetData() *[]byte {
-	return d.data
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	return &d.data
 }
 
 type DescriptorInterface interface {

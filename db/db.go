@@ -36,6 +36,7 @@ type DBInstance interface {
 
 type DataBlockRepository interface {
 	FindFirst(descr DescriptorInterface) (DataBlockNodeInterface, error)
+	Write(descr DescriptorInterface, data *[]byte) error
 }
 
 type DescriptorRepository interface {

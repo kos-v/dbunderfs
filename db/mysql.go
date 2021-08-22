@@ -102,6 +102,7 @@ func (inst *MySQLInstance) generatePool(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 
+	pool.Query("SET max_allowed_packet = ?", 1024*1024*64)
 	return pool, err
 }
 
@@ -112,8 +113,8 @@ type MySQLDataBlockRepository struct {
 func (repo *MySQLDataBlockRepository) FindFirst(descr DescriptorInterface) (DataBlockNodeInterface, error) {
 	row := repo.instance.GetPool().QueryRow(`SELECT fast_block FROM descriptors WHERE inode = ?`, descr.GetInode())
 
-	dataBlock := DataBlockNode{data: &[]byte{}}
-	err := row.Scan(dataBlock.data)
+	dataBlock := DataBlockNode{data: []byte{}}
+	err := row.Scan(&dataBlock.data)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil
@@ -122,6 +123,16 @@ func (repo *MySQLDataBlockRepository) FindFirst(descr DescriptorInterface) (Data
 	}
 
 	return &dataBlock, nil
+}
+
+func (repo *MySQLDataBlockRepository) Write(descr DescriptorInterface, data *[]byte) error {
+	_, err := repo.instance.GetPool().Exec(`UPDATE descriptors SET fast_block = ?, size = ? WHERE inode = ?`,
+		*data,
+		len(*data),
+		descr.GetInode(),
+	)
+
+	return err
 }
 
 type MySQLDescriptorRepository struct {

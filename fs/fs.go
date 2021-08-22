@@ -255,7 +255,9 @@ var _ = fuseFS.NodeOpener(&File{})
 func (f *File) Open(ctx context.Context, req *fuse.OpenRequest, resp *fuse.OpenResponse) (fuseFS.Handle, error) {
 	log.Infof("Opening file %d:%s", f.descriptor.GetInode(), f.descriptor.GetName())
 
-	resp.Flags |= fuse.OpenNonSeekable
+	//resp.Flags |= fuse.OpenNonSeekable
+	resp.Flags |= fuse.OpenDirectIO
+
 	return &FileHandle{file: f}, nil
 }
 
@@ -289,7 +291,43 @@ func (fh *FileHandle) Read(ctx context.Context, req *fuse.ReadRequest, resp *fus
 		return fmt.Errorf(msg)
 	}
 
-	resp.Data = *dataBlock.GetData()
+	data := *dataBlock.GetData()
+	if req.Offset >= int64(len(data)) {
+		data = nil
+	} else {
+		data = data[req.Offset:]
+	}
+	if len(data) > req.Size {
+		data = data[:req.Size]
+	}
+	n := copy(resp.Data[:req.Size], data)
+	resp.Data = resp.Data[:n]
+
+	return nil
+}
+
+var _ = fuseFS.HandleWriter(&FileHandle{})
+
+func (fh *FileHandle) Write(ctx context.Context, req *fuse.WriteRequest, resp *fuse.WriteResponse) error {
+	descr := fh.file.descriptor
+	log.Infof("Write file %d:%s", descr.GetInode(), descr.GetName())
+
+	repo := fh.file.fs.DBFactory.CreateDataBlockRepository()
+	dataBlock, err := repo.FindFirst(descr)
+	if err != nil {
+		log.Errorf("Error: %s", err.Error())
+		return err
+	}
+
+	addedSize := dataBlock.Add(uint64(req.Offset), &req.Data)
+
+	err = repo.Write(descr, dataBlock.GetData())
+	if err != nil {
+		log.Errorf("Error write to %s[%d] file. Error: %s", descr.GetName(), descr.GetInode(), err)
+		return err
+	}
+
+	resp.Size = addedSize
 
 	return nil
 }
