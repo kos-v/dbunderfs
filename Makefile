@@ -19,5 +19,12 @@ build_debug: clean
 clean:
 	rm -f ./${BINARY}
 
+test:
+	go test -v -race ./...
+
+test_with_cover:
+	rm ./coverage.txt
+	go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+
 fmt:
 	go fmt ./...
