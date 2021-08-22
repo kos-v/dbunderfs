@@ -23,7 +23,7 @@ test:
 	go test -v -race ./...
 
 test_with_cover:
-	rm ./coverage.txt
+	rm -f ./coverage.txt
 	go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
 
 fmt:
