@@ -36,5 +36,8 @@ func (coll *Collection) Append(item interface{}) {
 }
 
 func (coll *Collection) ToList() []interface{} {
+	coll.Lock()
+	defer coll.Unlock()
+
 	return coll.list
 }
