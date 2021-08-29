@@ -21,7 +21,7 @@ import (
 	"errors"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/kos-v/dbunderfs/container"
+	"github.com/kos-v/dbunderfs/src/container"
 	"sync"
 )
 
@@ -113,8 +113,8 @@ type MySQLDataBlockRepository struct {
 func (repo *MySQLDataBlockRepository) FindFirst(descr DescriptorInterface) (DataBlockNodeInterface, error) {
 	row := repo.instance.GetPool().QueryRow(`SELECT fast_block FROM descriptors WHERE inode = ?`, descr.GetInode())
 
-	dataBlock := DataBlockNode{data: []byte{}}
-	err := row.Scan(&dataBlock.data)
+	dataBlock := DataBlockNode{Data: []byte{}}
+	err := row.Scan(&dataBlock.Data)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, nil

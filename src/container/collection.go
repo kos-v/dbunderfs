@@ -26,12 +26,12 @@ type CollectionInterface interface {
 type Collection struct {
 	sync.RWMutex
 
-	list []interface{}
+	List []interface{}
 }
 
 func (coll *Collection) Append(item interface{}) {
 	coll.Lock()
-	coll.list = append(coll.list, item)
+	coll.List = append(coll.List, item)
 	coll.Unlock()
 }
 
@@ -39,5 +39,5 @@ func (coll *Collection) ToList() []interface{} {
 	coll.Lock()
 	defer coll.Unlock()
 
-	return coll.list
+	return coll.List
 }

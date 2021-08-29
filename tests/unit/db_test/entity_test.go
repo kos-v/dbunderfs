@@ -17,6 +17,7 @@
 package db
 
 import "testing"
+import "github.com/kos-v/dbunderfs/src/db"
 
 func TestDataBlockNode_Add(t *testing.T) {
 	tests := []struct {
@@ -38,7 +39,7 @@ func TestDataBlockNode_Add(t *testing.T) {
 
 	for id, test := range tests {
 		id += 1
-		dataBlock := DataBlockNode{data: test.defaultData}
+		dataBlock := db.DataBlockNode{Data: test.defaultData}
 		addLen := dataBlock.Add(test.offset, &test.addData)
 		if addLen != test.expectedAddLen {
 			t.Errorf("Test %v fail: the number of items added is not as expected.\nExpected: %v. Result: %v.\n", id, test.expectedAddLen, addLen)

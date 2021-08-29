@@ -18,8 +18,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/kos-v/dbunderfs/db"
-	"github.com/kos-v/dbunderfs/fs"
+	"github.com/kos-v/dbunderfs/src/db"
+	"github.com/kos-v/dbunderfs/src/fs"
 	"github.com/kos-v/dsnparser"
 	"github.com/spf13/cobra"
 )

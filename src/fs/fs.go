@@ -20,7 +20,7 @@ import (
 	"bazil.org/fuse"
 	fuseFS "bazil.org/fuse/fs"
 	"fmt"
-	"github.com/kos-v/dbunderfs/db"
+	"github.com/kos-v/dbunderfs/src/db"
 	log "github.com/sirupsen/logrus"
 	"golang.org/x/net/context"
 	"os"

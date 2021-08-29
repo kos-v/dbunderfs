@@ -17,7 +17,7 @@
 package main
 
 import (
-	commands "github.com/kos-v/dbunderfs/cmd"
+	commands "github.com/kos-v/dbunderfs/src/cmd"
 	"os"
 )
 

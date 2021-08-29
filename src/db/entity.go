@@ -39,23 +39,23 @@ type DataBlockNodeInterface interface {
 
 type DataBlockNode struct {
 	mu   sync.Mutex
-	data []byte
+	Data []byte
 }
 
 func (d *DataBlockNode) Add(offset uint64, newData *[]byte) int {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	if int(offset) > len(d.data) {
-		offset = uint64(len(d.data))
+	if int(offset) > len(d.Data) {
+		offset = uint64(len(d.Data))
 	}
 
-	newLen := len(d.data) + len(*newData) - (len(d.data) - int(offset))
+	newLen := len(d.Data) + len(*newData) - (len(d.Data) - int(offset))
 	data := make([]byte, newLen)
-	copy(data, d.data)
+	copy(data, d.Data)
 
 	addedLen := copy(data[offset:], *newData)
-	d.data = data
+	d.Data = data
 
 	return addedLen
 }
@@ -64,7 +64,7 @@ func (d *DataBlockNode) GetData() *[]byte {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 
-	return &d.data
+	return &d.Data
 }
 
 type DescriptorInterface interface {

@@ -14,9 +14,10 @@
    limitations under the License.
 */
 
-package container
+package container_test
 
 import "testing"
+import "github.com/kos-v/dbunderfs/src/container"
 
 func TestCollection_Append(t *testing.T) {
 	toInterfaceList := func(items []string) []interface{} {
@@ -39,7 +40,7 @@ func TestCollection_Append(t *testing.T) {
 	}
 
 	for id, test := range tests {
-		coll := Collection{list: toInterfaceList(test.initItems)}
+		coll := container.Collection{List: toInterfaceList(test.initItems)}
 		for _, appendItem := range test.appendItems {
 			coll.Append(appendItem)
 		}
