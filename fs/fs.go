@@ -218,8 +218,9 @@ func (d *Dir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.Cr
 		descriptor: newDescr,
 		fs:         d.fs,
 	}
+	handle := FileHandle{file: &file}
 
-	return &file, &file, nil
+	return &file, &handle, nil
 }
 
 var _ = fuseFS.NodeRemover(&Dir{})
