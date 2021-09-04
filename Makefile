@@ -1,5 +1,5 @@
 SRC_PACKAGE="github.com/kos-v/dbunderfs/src"
-TESTS_PATH="./tests"
+TESTS_PATH=./tests
 BINARY=dbfs
 RELEASE=`git describe --abbrev=0`
 BUILD=`git rev-parse --short=8 HEAD`
