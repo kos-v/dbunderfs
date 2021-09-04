@@ -39,6 +39,7 @@ prepare-docker-test-env:
 	rm -f ${TESTS_PATH}/.env
 	cp ${TESTS_PATH}/.env.example ${TESTS_PATH}/.env
 	cat ${TESTS_PATH}/.env
+	docker-compose version
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml config
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml --env-file=${TESTS_PATH}/.env config
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml up -d --build --force-recreate
