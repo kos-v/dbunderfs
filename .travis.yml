@@ -1,7 +1,9 @@
 language: go
+services:
+  - docker
 go:
   - "1.16"
 script:
-  - make test_with_cover
+  - make test-in-docker
 after_success:
   - bash <(curl -s https://codecov.io/bash)

@@ -1,0 +1,20 @@
+version: '2'
+services:
+  app:
+    build:
+      context: ./docker/golang/
+      args:
+        GOLANG_VERSION: ${GOLANG_VERSION}
+        HOST_USER_UID: ${HOST_USER_UID}
+        HOST_USER_GID: ${HOST_USER_GID}
+    volumes:
+      - '../:/go/src/app'
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:5.7
+    environment:
+      MYSQL_USER: fsuser
+      MYSQL_PASSWORD: fsuser
+      MYSQL_DATABASE: dbunderfs
+      MYSQL_ROOT_PASSWORD: root
