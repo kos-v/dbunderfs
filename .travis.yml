@@ -3,6 +3,11 @@ services:
   - docker
 go:
   - "1.16"
+env:
+  - COMPOSE_PROJECT_NAME=dbunderfs_test
+  - GOLANG_VERSION={{TRAVIS_GO_VERSION}}
+  - HOST_USER_UID=1000
+  - HOST_USER_GID=1000
 script:
   - make test-in-docker
 after_success:
