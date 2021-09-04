@@ -38,6 +38,5 @@ fmt:
 prepare-docker-test-env:
 	rm -f ${TESTS_PATH}/.env
 	cp ${TESTS_PATH}/.env.example ${TESTS_PATH}/.env
-	echo "HOST_USER_UID=${UID}" >> ${TESTS_PATH}/.env
-	echo "HOST_USER_GID=${GID}" >> ${TESTS_PATH}/.env
+	cat ${TESTS_PATH}/.env
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml up -d --build --force-recreate
