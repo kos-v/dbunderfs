@@ -3,11 +3,11 @@ services:
   - docker
 go:
   - "1.16"
-env:
-  - COMPOSE_PROJECT_NAME=dbunderfs_test
-  - GOLANG_VERSION={{TRAVIS_GO_VERSION}}
-  - HOST_USER_UID=1000
-  - HOST_USER_GID=1000
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 script:
   - make test-in-docker
 after_success:
