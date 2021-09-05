@@ -15,20 +15,20 @@ LDFLAGS=-w -s \
 build: clean
 	go build -ldflags "${LDFLAGS} -X ${SRC_PACKAGE}/cmd.fBinary=${BINARY} -X ${SRC_PACKAGE}/cmd.fDebug=false" -o ${BINARY} main.go
 
-build_debug: clean-debug
+build-debug: clean-debug
 	go build -ldflags "${LDFLAGS} -X ${SRC_PACKAGE}/cmd.fBinary=${BINARY_DEBUG} -X ${SRC_PACKAGE}/cmd.fDebug=true" -o ${BINARY_DEBUG} main.go
 
 test:
 	go test -v -race ./tests/...
 
-test_with_cover:
+test-with-cover:
 	go test -v -race -coverprofile=./coverage.txt -covermode=atomic ${TESTS_PATH}/...
 
 test-in-docker:
 	rm -f ${TESTS_PATH}/.env
 	cp ${TESTS_PATH}/.env.example ${TESTS_PATH}/.env
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml up -d --build --force-recreate
-	docker-compose -f ${TESTS_PATH}/docker-compose.yml run app bash -c "make test_with_cover"
+	docker-compose -f ${TESTS_PATH}/docker-compose.yml run app bash -c "make test-with-cover"
 
 clean:
 	rm -f ./${BINARY}
