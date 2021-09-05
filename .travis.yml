@@ -13,7 +13,7 @@ script:
   - make test-in-docker
   - make build
   - ./dbfs -v
-  - make build_debug
+  - make build-debug
   - ./dbfs-debug -v
 after_success:
   - bash <(curl -s https://codecov.io/bash)
