@@ -4,8 +4,6 @@ BINARY=dbfs
 RELEASE=`git describe --abbrev=0`
 BUILD=`git rev-parse --short=8 HEAD`
 BUILD_DATETIME=`date +%FT%H:%M:%S`
-UID=`id -u`
-GID=`id -g`
 
 LDFLAGS=-w -s \
 	-X ${SRC_PACKAGE}/cmd.fBinary=${BINARY} \
@@ -38,6 +36,5 @@ fmt:
 prepare-docker-test-env:
 	rm -f ${TESTS_PATH}/.env
 	cp ${TESTS_PATH}/.env.example ${TESTS_PATH}/.env
-	echo $UID
-	echo $GID
+	echo ${GOLANG_VERSION}
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml up -d --build --force-recreate
