@@ -3,13 +3,13 @@ go:
   - "1.16"
 env:
   - DOCKER_COMPOSE_VERSION=1.28.6
-  - GOLANG_VERSION={{TRAVIS_GO_VERSION}}
 before_install:
   - sudo rm /usr/local/bin/docker-compose
   - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
 script:
+  - export GOLANG_VERSION=${TRAVIS_GO_VERSION}
   - make test-in-docker
 after_success:
   - bash <(curl -s https://codecov.io/bash)

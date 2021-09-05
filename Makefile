@@ -37,4 +37,5 @@ prepare-docker-test-env:
 	rm -f ${TESTS_PATH}/.env
 	cp ${TESTS_PATH}/.env.example ${TESTS_PATH}/.env
 	echo ${GOLANG_VERSION}
+	docker-compose -f ${TESTS_PATH}/docker-compose.yml config
 	docker-compose -f ${TESTS_PATH}/docker-compose.yml up -d --build --force-recreate
