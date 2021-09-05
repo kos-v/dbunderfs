@@ -11,5 +11,9 @@ before_install:
 script:
   - export GOLANG_VERSION=${TRAVIS_GO_VERSION}
   - make test-in-docker
+  - make build
+  - ./dbfs -v
+  - make build_debug
+  - ./dbfs-debug -v
 after_success:
   - bash <(curl -s https://codecov.io/bash)
