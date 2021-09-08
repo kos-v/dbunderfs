@@ -20,6 +20,7 @@ import "sync"
 
 type CollectionInterface interface {
 	Append(item interface{})
+	Len() int
 	ToList() []interface{}
 }
 
@@ -33,6 +34,13 @@ func (coll *Collection) Append(item interface{}) {
 	coll.Lock()
 	coll.List = append(coll.List, item)
 	coll.Unlock()
+}
+
+func (coll *Collection) Len() int {
+	coll.Lock()
+	defer coll.Unlock()
+
+	return len(coll.List)
 }
 
 func (coll *Collection) ToList() []interface{} {

@@ -45,8 +45,8 @@ func TestCollection_Append(t *testing.T) {
 			coll.Append(appendItem)
 		}
 
-		if len(coll.ToList()) != len(test.expectedItems) {
-			t.Errorf("Test %v fail: object contains unexpected number of items.\nExpected: %v. Result: %v.\n", id, len(test.expectedItems), len(coll.ToList()))
+		if coll.Len() != len(test.expectedItems) {
+			t.Errorf("Test %v fail: object contains unexpected number of items.\nExpected: %v. Result: %v.\n", id, len(test.expectedItems), coll.Len())
 			return
 		}
 
