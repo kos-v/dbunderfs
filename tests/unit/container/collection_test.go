@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package container_test
+package container
 
 import "testing"
 import "github.com/kos-v/dbunderfs/src/container"
