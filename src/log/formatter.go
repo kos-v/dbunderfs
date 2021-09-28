@@ -14,38 +14,27 @@
    limitations under the License.
 */
 
-package container
+package log
 
-import "sync"
+import (
+	"github.com/fatih/color"
+	"github.com/sirupsen/logrus"
+)
 
-type CollectionInterface interface {
-	Append(item interface{})
-	Len() int
-	ToList() []interface{}
+type StdoutFormatter struct {
 }
 
-type Collection struct {
-	mu sync.Mutex
+func (f *StdoutFormatter) Format(entry *logrus.Entry) ([]byte, error) {
+	formatString := entry.Message
 
-	List []interface{}
-}
+	switch entry.Level.String() {
+	case "warning":
+		formatString = color.YellowString(formatString)
+	case "error", "fatal", "panic":
+		formatString = color.RedString(formatString)
+	}
 
-func (coll *Collection) Append(item interface{}) {
-	coll.mu.Lock()
-	coll.List = append(coll.List, item)
-	coll.mu.Unlock()
-}
+	formatString += "\n"
 
-func (coll *Collection) Len() int {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return len(coll.List)
-}
-
-func (coll *Collection) ToList() []interface{} {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return coll.List
+	return []byte(formatString), nil
 }

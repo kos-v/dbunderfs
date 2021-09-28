@@ -14,38 +14,26 @@
    limitations under the License.
 */
 
-package container
+package migration
 
-import "sync"
+import (
+	"github.com/kos-v/dbunderfs/src/db/migration"
+)
 
-type CollectionInterface interface {
-	Append(item interface{})
-	Len() int
-	ToList() []interface{}
-}
+func GenerateMigration(id string, upQueries []string, downQueries []string) *migration.Migration {
+	return migration.NewMigration(
+		id,
+		func(m *migration.Migration) error {
+			for _, query := range upQueries {
+				m.QueryBag.AddQuery(query)
+			}
+			return nil
+		},
+		func(m *migration.Migration) error {
+			for _, query := range downQueries {
+				m.QueryBag.AddQuery(query)
+			}
 
-type Collection struct {
-	mu sync.Mutex
-
-	List []interface{}
-}
-
-func (coll *Collection) Append(item interface{}) {
-	coll.mu.Lock()
-	coll.List = append(coll.List, item)
-	coll.mu.Unlock()
-}
-
-func (coll *Collection) Len() int {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return len(coll.List)
-}
-
-func (coll *Collection) ToList() []interface{} {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return coll.List
+			return nil
+		})
 }

@@ -14,38 +14,11 @@
    limitations under the License.
 */
 
-package container
+package mysql
 
-import "sync"
+import "github.com/kos-v/dbunderfs/src/db/migration"
 
-type CollectionInterface interface {
-	Append(item interface{})
-	Len() int
-	ToList() []interface{}
-}
-
-type Collection struct {
-	mu sync.Mutex
-
-	List []interface{}
-}
-
-func (coll *Collection) Append(item interface{}) {
-	coll.mu.Lock()
-	coll.List = append(coll.List, item)
-	coll.mu.Unlock()
-}
-
-func (coll *Collection) Len() int {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return len(coll.List)
-}
-
-func (coll *Collection) ToList() []interface{} {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return coll.List
+func Migrations() []*migration.Migration {
+	return []*migration.Migration{
+	}
 }

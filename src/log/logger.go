@@ -14,38 +14,17 @@
    limitations under the License.
 */
 
-package container
+package log
 
-import "sync"
+import (
+	"github.com/sirupsen/logrus"
+	"os"
+)
 
-type CollectionInterface interface {
-	Append(item interface{})
-	Len() int
-	ToList() []interface{}
-}
+func NewStdoutLogger() *logrus.Logger {
+	logger := logrus.New()
+	logger.SetOutput(os.Stdout)
+	logger.SetFormatter(new(StdoutFormatter))
 
-type Collection struct {
-	mu sync.Mutex
-
-	List []interface{}
-}
-
-func (coll *Collection) Append(item interface{}) {
-	coll.mu.Lock()
-	coll.List = append(coll.List, item)
-	coll.mu.Unlock()
-}
-
-func (coll *Collection) Len() int {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return len(coll.List)
-}
-
-func (coll *Collection) ToList() []interface{} {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return coll.List
+	return logger
 }

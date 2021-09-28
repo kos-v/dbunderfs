@@ -14,38 +14,21 @@
    limitations under the License.
 */
 
-package container
+package db
 
-import "sync"
+import (
+	"database/sql"
+)
 
-type CollectionInterface interface {
-	Append(item interface{})
-	Len() int
-	ToList() []interface{}
-}
-
-type Collection struct {
-	mu sync.Mutex
-
-	List []interface{}
-}
-
-func (coll *Collection) Append(item interface{}) {
-	coll.mu.Lock()
-	coll.List = append(coll.List, item)
-	coll.mu.Unlock()
-}
-
-func (coll *Collection) Len() int {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return len(coll.List)
-}
-
-func (coll *Collection) ToList() []interface{} {
-	coll.mu.Lock()
-	defer coll.mu.Unlock()
-
-	return coll.List
+type DBInstance interface {
+	Close() error
+	Connect() (*sql.DB, error)
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	GetDriverName() string
+	GetDSN() DSN
+	GetPool() *sql.DB
+	HasConnection() bool
+	Reconnect() (*sql.DB, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
 }

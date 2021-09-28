@@ -22,11 +22,39 @@ import (
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/kos-v/dbunderfs/src/container"
+	"github.com/kos-v/dsnparser"
+	"strings"
 	"sync"
 )
 
+type MySQLDSN struct {
+	ParsedDSN dsnparser.DSN
+}
+
+func (d *MySQLDSN) GetDatabase() string {
+	return d.ParsedDSN.GetPath()
+}
+
+func (d *MySQLDSN) GetTablePrefix() string {
+	if !d.ParsedDSN.HasParam("tblprefix") {
+		return ""
+	}
+	return d.ParsedDSN.GetParam("tblprefix")
+}
+
+func (d *MySQLDSN) ToString() string {
+	protocol := "tcp"
+	if d.ParsedDSN.HasParam("protocol") {
+		protocol = d.ParsedDSN.GetParam("protocol")
+	}
+
+	return d.ParsedDSN.GetUser() + ":" + d.ParsedDSN.GetPassword() + "@" +
+		protocol + "(" + d.ParsedDSN.GetHost() + ")/" +
+		d.ParsedDSN.GetPath()
+}
+
 type MySQLInstance struct {
-	DSN string
+	DSN MySQLDSN
 
 	sync.RWMutex
 	pool *sql.DB
@@ -44,7 +72,7 @@ func (inst *MySQLInstance) Connect() (*sql.DB, error) {
 		return inst.pool, nil
 	}
 
-	pool, err := inst.generatePool(inst.DSN)
+	pool, err := inst.generatePool(inst.DSN.ToString())
 	if err != nil {
 		return nil, err
 	}
@@ -54,6 +82,17 @@ func (inst *MySQLInstance) Connect() (*sql.DB, error) {
 	inst.Unlock()
 
 	return inst.pool, nil
+}
+
+func (inst *MySQLInstance) GetDSN() DSN {
+	return &inst.DSN
+}
+
+func (inst *MySQLInstance) Exec(query string, args ...interface{}) (sql.Result, error) {
+	inst.Lock()
+	defer inst.Unlock()
+
+	return inst.pool.Exec(inst.prepareQuery(query), args...)
 }
 
 func (inst *MySQLInstance) GetDriverName() string {
@@ -75,7 +114,7 @@ func (inst *MySQLInstance) HasConnection() bool {
 }
 
 func (inst *MySQLInstance) Reconnect() (*sql.DB, error) {
-	pool, err := inst.generatePool(inst.DSN)
+	pool, err := inst.generatePool(inst.DSN.ToString())
 	if err != nil {
 		return nil, err
 	}
@@ -93,6 +132,20 @@ func (inst *MySQLInstance) Reconnect() (*sql.DB, error) {
 	return inst.pool, nil
 }
 
+func (inst *MySQLInstance) Query(query string, args ...interface{}) (*sql.Rows, error) {
+	inst.Lock()
+	defer inst.Unlock()
+
+	return inst.pool.Query(inst.prepareQuery(query), args...)
+}
+
+func (inst *MySQLInstance) QueryRow(query string, args ...interface{}) *sql.Row {
+	inst.Lock()
+	defer inst.Unlock()
+
+	return inst.pool.QueryRow(inst.prepareQuery(query), args...)
+}
+
 func (inst *MySQLInstance) generatePool(dsn string) (*sql.DB, error) {
 	pool, err := sql.Open("mysql", dsn)
 	if err != nil {
@@ -104,6 +157,11 @@ func (inst *MySQLInstance) generatePool(dsn string) (*sql.DB, error) {
 
 	pool.Query("SET max_allowed_packet = ?", 1024*1024*64)
 	return pool, err
+}
+
+func (inst *MySQLInstance) prepareQuery(query string) string {
+	// TODO: Move to a replace function
+	return strings.Replace(query, "{%t_prefix%}", inst.DSN.GetTablePrefix(), -1)
 }
 
 type MySQLDataBlockRepository struct {
