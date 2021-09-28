@@ -16,10 +16,28 @@
 
 package mysql
 
-import "github.com/kos-v/dbunderfs/src/db/migration"
+import (
+	"github.com/kos-v/dbunderfs/src/db/migration"
+)
 
-func Migrations() []*migration.Migration {
-	return []*migration.Migration{
-		migration000000000000(),
-	}
+func migration000000000000() *migration.Migration {
+	return migration.NewMigration(
+		"000000000000",
+		func(migration *migration.Migration) error {
+			migration.QueryBag.AddQuery(`
+				CREATE TABLE {%t_prefix%}migrations (
+					id varchar(255) NOT NULL,
+					migrated_at int(11) NOT NULL,
+					PRIMARY KEY (id)
+				) ENGINE = InnoDB
+				DEFAULT CHARSET = utf8`,
+			)
+
+			return nil
+		},
+		func(migration *migration.Migration) error {
+			migration.QueryBag.AddQuery(`DROP TABLE {%t_prefix%}migrations`)
+
+			return nil
+		})
 }
