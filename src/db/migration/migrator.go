@@ -150,4 +150,3 @@ func (m *Migrator) prepare() {
 		m.Migrations[i].QueryBag = &QueryBag{Queries: container.Collection{List: []interface{}{}}}
 	}
 }
-

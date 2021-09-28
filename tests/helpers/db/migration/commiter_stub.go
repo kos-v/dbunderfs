@@ -22,7 +22,7 @@ import (
 )
 
 type CommiterStub struct {
-	mu *sync.Mutex
+	mu      *sync.Mutex
 	Storage map[string]int64
 }
 
