@@ -32,3 +32,7 @@ type DBInstance interface {
 	Query(query string, args ...interface{}) (*sql.Rows, error)
 	QueryRow(query string, args ...interface{}) *sql.Row
 }
+
+type QueryExecutor interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
+}

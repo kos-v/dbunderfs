@@ -91,7 +91,7 @@ func createMigrator(dbInstance db.DBInstance, opts migrateOpts) (*migration.Migr
 		Commiter:            commiter,
 		DownDirectionNumber: opts.downDirectionNumber,
 		Direction:           opts.direction,
-		Instance:            dbInstance,
+		QueryExecutor:       dbInstance,
 		Logger:              log.NewStdoutLogger(),
 		Migrations:          migrations,
 	}, nil

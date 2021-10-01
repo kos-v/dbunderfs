@@ -28,7 +28,7 @@ type Migrator struct {
 	Commiter            Commiter
 	Direction           string
 	DownDirectionNumber int
-	Instance            db.DBInstance
+	QueryExecutor       db.QueryExecutor
 	Logger              *log.Logger
 	Migrations          []*Migration
 }
@@ -82,7 +82,7 @@ func (m *Migrator) down() error {
 
 		for _, query := range queryBag.GetQueries() {
 			m.Logger.Infof("Executing query: %s", query)
-			_, err = m.Instance.Exec(query)
+			_, err = m.QueryExecutor.Exec(query)
 			if err != nil {
 				m.Logger.Error("Fail.")
 				return err
@@ -120,7 +120,7 @@ func (m *Migrator) up() error {
 
 		for _, query := range queryBag.GetQueries() {
 			m.Logger.Infof("Executing query: %s", query)
-			_, err = m.Instance.Exec(query)
+			_, err = m.QueryExecutor.Exec(query)
 			if err != nil {
 				m.Logger.Error("Fail.")
 				return err
