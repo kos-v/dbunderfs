@@ -47,7 +47,7 @@ func (m *Migrator) Migrate() error {
 }
 
 func (m *Migrator) down() error {
-	migrations := []*Migration{}
+	var migrations []*Migration
 	for _, migration := range m.Migrations {
 		if ok, err := m.Commiter.IsCommited(migration); err == nil {
 			if ok {
