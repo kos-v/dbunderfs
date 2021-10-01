@@ -43,6 +43,17 @@ func (coll *Collection) Len() int {
 	return len(coll.List)
 }
 
+func (coll *Collection) Remove(index int) {
+	coll.mu.Lock()
+	defer coll.mu.Unlock()
+
+	if index < 0 || index >= len(coll.List) {
+		return
+	}
+
+	coll.List = append(coll.List[:index], coll.List[index+1:]...)
+}
+
 func (coll *Collection) ToList() []interface{} {
 	coll.mu.Lock()
 	defer coll.mu.Unlock()

@@ -57,3 +57,39 @@ func TestCollection_Append(t *testing.T) {
 		}
 	}
 }
+
+func TestCollection_Remove(t *testing.T) {
+	tests := []struct {
+		initItems     []string
+		removeIndex   int
+		expectedItems []string
+	}{
+		{[]string{}, 0, []string{}},
+		{[]string{}, 100, []string{}},
+		{[]string{"foo"}, 0, []string{}},
+		{[]string{"foo", "bar"}, 1, []string{"foo"}},
+		{[]string{"foo", "bar", "baz"}, 1, []string{"foo", "baz"}},
+		{[]string{"foo", "bar", "baz"}, 0, []string{"bar", "baz"}},
+		{[]string{"foo"}, 1, []string{"foo"}},
+	}
+
+	for id, test := range tests {
+		coll := container.Collection{List: []interface{}{}}
+		for _, appendItem := range test.initItems {
+			coll.Append(appendItem)
+		}
+
+		coll.Remove(test.removeIndex)
+
+		if coll.Len() != len(test.expectedItems) {
+			t.Errorf("Test %v fail: object contains unexpected number of items.\nExpected: %v. Result: %v.\n", id, len(test.expectedItems), coll.Len())
+			return
+		}
+
+		for i, item := range coll.ToList() {
+			if item != test.expectedItems[i] {
+				t.Errorf("Test %v fail: result data is not as expected.\nExpected: %v. Result: %v.\n", id, test.expectedItems[i], item.(string))
+			}
+		}
+	}
+}
