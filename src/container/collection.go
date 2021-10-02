@@ -25,27 +25,38 @@ type CollectionInterface interface {
 }
 
 type Collection struct {
-	sync.RWMutex
+	mu sync.Mutex
 
 	List []interface{}
 }
 
 func (coll *Collection) Append(item interface{}) {
-	coll.Lock()
+	coll.mu.Lock()
 	coll.List = append(coll.List, item)
-	coll.Unlock()
+	coll.mu.Unlock()
 }
 
 func (coll *Collection) Len() int {
-	coll.Lock()
-	defer coll.Unlock()
+	coll.mu.Lock()
+	defer coll.mu.Unlock()
 
 	return len(coll.List)
 }
 
+func (coll *Collection) Remove(index int) {
+	coll.mu.Lock()
+	defer coll.mu.Unlock()
+
+	if index < 0 || index >= len(coll.List) {
+		return
+	}
+
+	coll.List = append(coll.List[:index], coll.List[index+1:]...)
+}
+
 func (coll *Collection) ToList() []interface{} {
-	coll.Lock()
-	defer coll.Unlock()
+	coll.mu.Lock()
+	defer coll.mu.Unlock()
 
 	return coll.List
 }

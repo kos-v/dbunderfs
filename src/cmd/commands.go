@@ -72,6 +72,7 @@ func RootCommand() *cobra.Command {
 	command.AddCommand(
 		mountCommand(),
 		unmountCommand(),
+		migrateCommand(),
 	)
 
 	return command

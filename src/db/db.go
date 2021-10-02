@@ -17,7 +17,6 @@
 package db
 
 import (
-	"database/sql"
 	"github.com/kos-v/dbunderfs/src/container"
 )
 
@@ -25,13 +24,10 @@ const (
 	RootName string = "/"
 )
 
-type DBInstance interface {
-	Close() error
-	Connect() (*sql.DB, error)
-	GetDriverName() string
-	GetPool() *sql.DB
-	HasConnection() bool
-	Reconnect() (*sql.DB, error)
+type DSN interface {
+	GetDatabase() string
+	GetTablePrefix() string
+	ToString() string
 }
 
 type DataBlockRepository interface {

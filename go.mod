@@ -4,6 +4,7 @@ go 1.13
 
 require (
 	bazil.org/fuse v0.0.0-20200524192727-fb710f7dfd05
+	github.com/fatih/color v1.13.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/kos-v/dsnparser v0.0.0-20210215232427-51a9048c1778
 	github.com/sirupsen/logrus v1.8.1

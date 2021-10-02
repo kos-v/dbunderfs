@@ -19,6 +19,7 @@ package cmd
 import (
 	"fmt"
 	"github.com/kos-v/dbunderfs/src/db"
+	dbFactory "github.com/kos-v/dbunderfs/src/factory/db"
 	"github.com/kos-v/dbunderfs/src/fs"
 	"github.com/kos-v/dsnparser"
 	"github.com/spf13/cobra"
@@ -48,7 +49,7 @@ func mountCommand() *cobra.Command {
 func runMount(opts mountOpts) error {
 	dsn := dsnparser.Parse(opts.dsn)
 
-	dbInstance, err := createDBInstance(*dsn)
+	dbInstance, err := dbFactory.CreateInstance(*dsn)
 	if err != nil {
 		return err
 	}
@@ -64,25 +65,6 @@ func runMount(opts mountOpts) error {
 	}
 
 	return nil
-}
-
-func createDBInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
-	if dsn.GetScheme() != "mysql" {
-		return nil, fmt.Errorf("Driver for database \"%s\" not found.\n", dsn.GetScheme())
-	}
-
-	protocol := "tcp"
-	if dsn.HasParam("protocol") {
-		protocol = dsn.GetParam("protocol")
-	}
-	driverDsn := dsn.GetUser() + ":" + dsn.GetPassword() + "@" + protocol + "(" + dsn.GetHost() + ")/" + dsn.GetPath()
-
-	inst := db.MySQLInstance{DSN: driverDsn}
-	if _, err := inst.Connect(); err != nil {
-		return nil, err
-	}
-
-	return &inst, nil
 }
 
 func createDBFactory(inst db.DBInstance) (db.DBFactory, error) {
