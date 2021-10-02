@@ -21,7 +21,5 @@ import "github.com/kos-v/dbunderfs/src/db/migration"
 func Migrations() []*migration.Migration {
 	return []*migration.Migration{
 		migration000000000000(),
-		migration202109101200(),
-		migration202110030023(),
 	}
 }
