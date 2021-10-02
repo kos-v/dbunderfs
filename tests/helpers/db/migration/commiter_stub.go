@@ -17,44 +17,37 @@
 package migration
 
 import (
+	"github.com/kos-v/dbunderfs/src/container"
 	"github.com/kos-v/dbunderfs/src/db/migration"
-	"sync"
 )
 
 type CommiterStub struct {
-	mu      *sync.Mutex
-	Storage map[string]int64
+	Storage *container.Collection
 }
 
 func (c *CommiterStub) Commit(migration *migration.Migration) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	c.Storage[migration.Id] = migration.CreatedAt
+	c.Storage.Append(migration.Id)
 
 	return nil
 }
 
 func (c *CommiterStub) IsCommited(migration *migration.Migration) (bool, error) {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	if _, ok := c.Storage[migration.Id]; ok {
-		return true, nil
+	for _, id := range c.Storage.ToList() {
+		if migration.Id == id {
+			return true, nil
+		}
 	}
 
 	return false, nil
 }
 
 func (c *CommiterStub) Rollback(migration *migration.Migration) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	if _, ok := c.Storage[migration.Id]; !ok {
-		return nil
+	for i, id := range c.Storage.ToList() {
+		if id == migration.Id {
+			c.Storage.Remove(i)
+			break
+		}
 	}
-
-	delete(c.Storage, migration.Id)
 
 	return nil
 }
