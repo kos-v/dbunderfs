@@ -17,7 +17,10 @@
 package mysql
 
 import (
+	"fmt"
+	"github.com/kos-v/dbunderfs/src/db"
 	"github.com/kos-v/dbunderfs/src/db/migration"
+	"os/user"
 )
 
 func migration000000000000() *migration.Migration {
@@ -129,6 +132,19 @@ func migration000000000000() *migration.Migration {
 					END IF;
 				END`,
 			)
+
+			currentUser, err := user.Current()
+			if err != nil {
+				return err
+			}
+
+			migration.QueryBag.AddQuery(fmt.Sprintf(
+				`INSERT INTO {%%t_prefix%%}descriptors (parent, name, type, size, permission,  uid, gid) VALUES (NULL, %q, %q, 0, 755, %s, %s)`,
+				db.RootName,
+				string(db.DT_Dir),
+				currentUser.Uid,
+				currentUser.Gid,
+			))
 
 			return nil
 		},
