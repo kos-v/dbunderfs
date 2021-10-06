@@ -20,6 +20,7 @@ import (
 	"fmt"
 	"github.com/kos-v/dbunderfs/src/db"
 	"github.com/kos-v/dbunderfs/src/db/migration"
+	"github.com/kos-v/dbunderfs/src/db/mysql"
 	mysqlMigrations "github.com/kos-v/dbunderfs/src/migrations/mysql"
 	"github.com/kos-v/dsnparser"
 )
@@ -33,7 +34,7 @@ func (err *DriverNotFoundError) Error() string {
 func CreateInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
 	switch dsn.GetScheme() {
 	case "mysql":
-		inst := db.MySQLInstance{DSN: db.MySQLDSN{ParsedDSN: dsn}}
+		inst := mysql.Instance{DSN: mysql.DSN{ParsedDSN: dsn}}
 		if _, err := inst.Connect(); err != nil {
 			return nil, err
 		}
@@ -66,5 +67,5 @@ func CreateRepositoryRegistry(inst db.DBInstance) (db.RepositoryRegistry, error)
 		return nil, fmt.Errorf("Driver for database \"%s\" not found.\n", inst.GetDriverName())
 	}
 
-	return &db.MySQLRepositoryRegistry{Instance: inst}, nil
+	return &mysql.RepositoryRegistry{Instance: inst}, nil
 }
