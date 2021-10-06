@@ -369,14 +369,14 @@ func (dr *MySQLDescriptorRepository) hydrateDescriptor(row interface{}) (Descrip
 	return &descr, nil
 }
 
-type MySQLFactory struct {
+type MySQLRepositoryRegistry struct {
 	Instance DBInstance
 }
 
-func (f *MySQLFactory) CreateDataBlockRepository() DataBlockRepository {
+func (f *MySQLRepositoryRegistry) CreateDataBlockRepository() DataBlockRepository {
 	return &MySQLDataBlockRepository{instance: f.Instance}
 }
 
-func (f *MySQLFactory) CreateDescriptorRepository() DescriptorRepository {
+func (f *MySQLRepositoryRegistry) CreateDescriptorRepository() DescriptorRepository {
 	return &MySQLDescriptorRepository{instance: f.Instance}
 }

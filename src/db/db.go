@@ -45,7 +45,7 @@ type DescriptorRepository interface {
 	RemoveByName(parent Inode, name string) error
 }
 
-type DBFactory interface {
+type RepositoryRegistry interface {
 	CreateDataBlockRepository() DataBlockRepository
 	CreateDescriptorRepository() DescriptorRepository
 }

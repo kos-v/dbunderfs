@@ -60,3 +60,11 @@ func CreateMigrations(instance db.DBInstance) ([]*migration.Migration, error) {
 
 	return nil, &DriverNotFoundError{driver: instance.GetDriverName()}
 }
+
+func CreateRepositoryRegistry(inst db.DBInstance) (db.RepositoryRegistry, error) {
+	if inst.GetDriverName() != "mysql" {
+		return nil, fmt.Errorf("Driver for database \"%s\" not found.\n", inst.GetDriverName())
+	}
+
+	return &db.MySQLRepositoryRegistry{Instance: inst}, nil
+}
