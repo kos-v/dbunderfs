@@ -373,10 +373,10 @@ type MySQLRepositoryRegistry struct {
 	Instance DBInstance
 }
 
-func (f *MySQLRepositoryRegistry) CreateDataBlockRepository() DataBlockRepository {
+func (f *MySQLRepositoryRegistry) GetDataBlockRepository() DataBlockRepository {
 	return &MySQLDataBlockRepository{instance: f.Instance}
 }
 
-func (f *MySQLRepositoryRegistry) CreateDescriptorRepository() DescriptorRepository {
+func (f *MySQLRepositoryRegistry) GetDescriptorRepository() DescriptorRepository {
 	return &MySQLDescriptorRepository{instance: f.Instance}
 }

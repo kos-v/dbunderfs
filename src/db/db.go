@@ -46,6 +46,6 @@ type DescriptorRepository interface {
 }
 
 type RepositoryRegistry interface {
-	CreateDataBlockRepository() DataBlockRepository
-	CreateDescriptorRepository() DescriptorRepository
+	GetDataBlockRepository() DataBlockRepository
+	GetDescriptorRepository() DescriptorRepository
 }

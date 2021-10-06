@@ -57,7 +57,7 @@ type FS struct {
 func (f *FS) Root() (fuseFS.Node, error) {
 	log.Infof("Finding root %s", db.RootName)
 
-	descr, err := f.RepositoryRegistry.CreateDescriptorRepository().FindRoot()
+	descr, err := f.RepositoryRegistry.GetDescriptorRepository().FindRoot()
 	if err != nil {
 		log.Warnf("Root finding error: %s", err.Error())
 		return nil, err
@@ -100,7 +100,7 @@ func (d *Dir) Lookup(ctx context.Context, req *fuse.LookupRequest, resp *fuse.Lo
 	requestName := req.Name
 	log.Infof("Lookup in \"%d:%s\". Request: %s", d.descriptor.GetInode(), d.descriptor.GetName(), requestName)
 
-	repo := d.fs.RepositoryRegistry.CreateDescriptorRepository()
+	repo := d.fs.RepositoryRegistry.GetDescriptorRepository()
 	descr, err := repo.FindSingleByName(d.descriptor.GetInode(), requestName)
 	if err != nil {
 		log.Warnf("Error: %s", err.Error())
@@ -130,7 +130,7 @@ var _ = fuseFS.HandleReadDirAller(&Dir{})
 func (d *Dir) ReadDirAll(ctx context.Context) ([]fuse.Dirent, error) {
 	log.Infof("Read dir all in %d:%s", d.descriptor.GetInode(), d.descriptor.GetName())
 
-	collection, err := d.fs.RepositoryRegistry.CreateDescriptorRepository().FindChildrenByInode(d.descriptor.GetInode())
+	collection, err := d.fs.RepositoryRegistry.GetDescriptorRepository().FindChildrenByInode(d.descriptor.GetInode())
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ var _ fuseFS.NodeMkdirer = (*Dir)(nil)
 func (d *Dir) Mkdir(ctx context.Context, req *fuse.MkdirRequest) (fuseFS.Node, error) {
 	log.Infof("Mkdir for %d:%s", d.descriptor.GetInode(), req.Name)
 
-	repo := d.fs.RepositoryRegistry.CreateDescriptorRepository()
+	repo := d.fs.RepositoryRegistry.GetDescriptorRepository()
 	isExists, err := repo.IsExistsByName(d.descriptor.GetInode(), req.Name)
 	if err != nil {
 		log.Warnf("Error: %s: ", err.Error())
@@ -191,7 +191,7 @@ var _ = fuseFS.NodeCreater(&Dir{})
 func (d *Dir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.CreateResponse) (fuseFS.Node, fuseFS.Handle, error) {
 	log.Infof("Create file %s in %s[%d]", req.Name, d.descriptor.GetName(), d.descriptor.GetInode())
 
-	repo := d.fs.RepositoryRegistry.CreateDescriptorRepository()
+	repo := d.fs.RepositoryRegistry.GetDescriptorRepository()
 	isExists, err := repo.IsExistsByName(d.descriptor.GetInode(), req.Name)
 	if err != nil {
 		log.Warnf("Error: %s: ", err.Error())
@@ -228,7 +228,7 @@ var _ = fuseFS.NodeRemover(&Dir{})
 func (d *Dir) Remove(ctx context.Context, req *fuse.RemoveRequest) error {
 	log.Infof("Removing entry %s in %s[%d]", req.Name, d.descriptor.GetName(), d.descriptor.GetInode())
 
-	repo := d.fs.RepositoryRegistry.CreateDescriptorRepository()
+	repo := d.fs.RepositoryRegistry.GetDescriptorRepository()
 	return repo.RemoveByName(d.descriptor.GetInode(), req.Name)
 }
 
@@ -280,7 +280,7 @@ func (fh *FileHandle) Read(ctx context.Context, req *fuse.ReadRequest, resp *fus
 	descr := fh.file.descriptor
 	log.Infof("Reading file %d:%s", descr.GetInode(), descr.GetName())
 
-	repo := fh.file.fs.RepositoryRegistry.CreateDataBlockRepository()
+	repo := fh.file.fs.RepositoryRegistry.GetDataBlockRepository()
 	dataBlock, err := repo.FindFirst(descr)
 	if err != nil {
 		log.Errorf("Error: %s", err.Error())
@@ -313,7 +313,7 @@ func (fh *FileHandle) Write(ctx context.Context, req *fuse.WriteRequest, resp *f
 	descr := fh.file.descriptor
 	log.Infof("Write file %d:%s", descr.GetInode(), descr.GetName())
 
-	repo := fh.file.fs.RepositoryRegistry.CreateDataBlockRepository()
+	repo := fh.file.fs.RepositoryRegistry.GetDataBlockRepository()
 	dataBlock, err := repo.FindFirst(descr)
 	if err != nil {
 		log.Errorf("Error: %s", err.Error())
