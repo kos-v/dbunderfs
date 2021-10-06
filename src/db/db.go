@@ -17,12 +17,26 @@
 package db
 
 import (
+	"database/sql"
 	"github.com/kos-v/dbunderfs/src/container"
 )
 
 const (
 	RootName string = "/"
 )
+
+type DBInstance interface {
+	Close() error
+	Connect() (*sql.DB, error)
+	Exec(query string, args ...interface{}) (sql.Result, error)
+	GetDriverName() string
+	GetDSN() DSN
+	GetPool() *sql.DB
+	HasConnection() bool
+	Reconnect() (*sql.DB, error)
+	Query(query string, args ...interface{}) (*sql.Rows, error)
+	QueryRow(query string, args ...interface{}) *sql.Row
+}
 
 type DSN interface {
 	GetDatabase() string
@@ -45,7 +59,11 @@ type DescriptorRepository interface {
 	RemoveByName(parent Inode, name string) error
 }
 
-type DBFactory interface {
-	CreateDataBlockRepository() DataBlockRepository
-	CreateDescriptorRepository() DescriptorRepository
+type RepositoryRegistry interface {
+	GetDataBlockRepository() DataBlockRepository
+	GetDescriptorRepository() DescriptorRepository
+}
+
+type QueryExecutor interface {
+	Exec(query string, args ...interface{}) (sql.Result, error)
 }

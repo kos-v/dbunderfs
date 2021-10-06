@@ -14,17 +14,18 @@
    limitations under the License.
 */
 
-package main
+package mysql
 
-import (
-	_ "github.com/go-sql-driver/mysql"
-	commands "github.com/kos-v/dbunderfs/src/cmd"
-	"os"
-)
+import "github.com/kos-v/dbunderfs/src/db"
 
-func main() {
-	err := commands.RootCommand().Execute()
-	if err != nil {
-		os.Exit(1)
-	}
+type RepositoryRegistry struct {
+	Instance db.DBInstance
+}
+
+func (f *RepositoryRegistry) GetDataBlockRepository() db.DataBlockRepository {
+	return &DataBlockRepository{instance: f.Instance}
+}
+
+func (f *RepositoryRegistry) GetDescriptorRepository() db.DescriptorRepository {
+	return &DescriptorRepository{instance: f.Instance}
 }

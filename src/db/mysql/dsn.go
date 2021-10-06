@@ -14,25 +14,32 @@
    limitations under the License.
 */
 
-package db
+package mysql
 
-import (
-	"database/sql"
-)
+import "github.com/kos-v/dsnparser"
 
-type DBInstance interface {
-	Close() error
-	Connect() (*sql.DB, error)
-	Exec(query string, args ...interface{}) (sql.Result, error)
-	GetDriverName() string
-	GetDSN() DSN
-	GetPool() *sql.DB
-	HasConnection() bool
-	Reconnect() (*sql.DB, error)
-	Query(query string, args ...interface{}) (*sql.Rows, error)
-	QueryRow(query string, args ...interface{}) *sql.Row
+type DSN struct {
+	ParsedDSN dsnparser.DSN
 }
 
-type QueryExecutor interface {
-	Exec(query string, args ...interface{}) (sql.Result, error)
+func (d *DSN) GetDatabase() string {
+	return d.ParsedDSN.GetPath()
+}
+
+func (d *DSN) GetTablePrefix() string {
+	if !d.ParsedDSN.HasParam("tblprefix") {
+		return ""
+	}
+	return d.ParsedDSN.GetParam("tblprefix")
+}
+
+func (d *DSN) ToString() string {
+	protocol := "tcp"
+	if d.ParsedDSN.HasParam("protocol") {
+		protocol = d.ParsedDSN.GetParam("protocol")
+	}
+
+	return d.ParsedDSN.GetUser() + ":" + d.ParsedDSN.GetPassword() + "@" +
+		protocol + "(" + d.ParsedDSN.GetHost() + ")/" +
+		d.ParsedDSN.GetPath()
 }

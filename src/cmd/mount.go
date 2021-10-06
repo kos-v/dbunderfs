@@ -17,8 +17,6 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/kos-v/dbunderfs/src/db"
 	dbFactory "github.com/kos-v/dbunderfs/src/factory/db"
 	"github.com/kos-v/dbunderfs/src/fs"
 	"github.com/kos-v/dsnparser"
@@ -55,22 +53,10 @@ func runMount(opts mountOpts) error {
 	}
 	defer dbInstance.Close()
 
-	dbFactory, err := createDBFactory(dbInstance)
+	repositoryRegistry, err := dbFactory.CreateRepositoryRegistry(dbInstance)
 	if err != nil {
 		return err
 	}
 
-	if err = fs.Mount(opts.point, dbFactory); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func createDBFactory(inst db.DBInstance) (db.DBFactory, error) {
-	if inst.GetDriverName() != "mysql" {
-		return nil, fmt.Errorf("Driver for database \"%s\" not found.\n", inst.GetDriverName())
-	}
-
-	return &db.MySQLFactory{Instance: inst}, nil
+	return fs.Mount(opts.point, repositoryRegistry)
 }
