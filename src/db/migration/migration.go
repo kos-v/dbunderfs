@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"github.com/kos-v/dbunderfs/src/container"
 	"github.com/kos-v/dbunderfs/src/db"
-	"time"
 )
 
 const DirDown = "down"
@@ -110,68 +109,4 @@ type Commiter interface {
 	Commit(migration *Migration) error
 	IsCommited(migration *Migration) (bool, error)
 	Rollback(migration *Migration) error
-}
-
-type MySQLCommiter struct {
-	Instance db.DBInstance
-}
-
-func (c *MySQLCommiter) Commit(migration *Migration) error {
-	migration.CreatedAt = time.Now().Unix()
-
-	query := `INSERT INTO {%t_prefix%}migrations (id, migrated_at) VALUES (?, ?)`
-	_, err := c.Instance.Exec(query, migration.Id, migration.CreatedAt)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (c *MySQLCommiter) IsCommited(migration *Migration) (bool, error) {
-	if ok, err := c.isExistsCommitTable(); err == nil {
-		if !ok {
-			return false, nil
-		}
-	} else {
-		return false, err
-	}
-
-	var isExistsMigration int
-	row := c.Instance.QueryRow("SELECT COUNT(*) FROM {%t_prefix%}migrations WHERE id = ?", migration.Id)
-	err := row.Scan(&isExistsMigration)
-	if err != nil {
-		return false, err
-	}
-
-	return isExistsMigration > 0, nil
-}
-
-func (c *MySQLCommiter) Rollback(migration *Migration) error {
-	if ok, err := c.isExistsCommitTable(); err == nil {
-		if !ok {
-			return nil
-		}
-	} else {
-		return err
-	}
-
-	_, err := c.Instance.Exec("DELETE FROM {%t_prefix%}migrations WHERE id = ?", migration.Id)
-	return err
-}
-
-func (c *MySQLCommiter) isExistsCommitTable() (bool, error) {
-	var isExists int
-
-	query := `SELECT COUNT(*) FROM information_schema.tables 
-		WHERE table_schema = ? AND table_name = '{%t_prefix%}migrations' 
-		LIMIT 1`
-	row := c.Instance.QueryRow(query, c.Instance.GetDSN().GetDatabase())
-
-	err := row.Scan(&isExists)
-	if err != nil {
-		return false, err
-	}
-
-	return isExists != 0, nil
 }

@@ -21,6 +21,7 @@ import (
 	"github.com/kos-v/dbunderfs/src/db"
 	"github.com/kos-v/dbunderfs/src/db/migration"
 	"github.com/kos-v/dbunderfs/src/db/mysql"
+	mysqlMigration "github.com/kos-v/dbunderfs/src/db/mysql/migration"
 	mysqlMigrations "github.com/kos-v/dbunderfs/src/migrations/mysql"
 	"github.com/kos-v/dsnparser"
 )
@@ -47,7 +48,7 @@ func CreateInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
 func CreateMigrationCommiter(instance db.DBInstance) (migration.Commiter, error) {
 	switch instance.GetDriverName() {
 	case "mysql":
-		return &migration.MySQLCommiter{Instance: instance}, nil
+		return &mysqlMigration.Commiter{Instance: instance}, nil
 	}
 
 	return nil, &DriverNotFoundError{driver: instance.GetDriverName()}
