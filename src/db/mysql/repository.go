@@ -75,12 +75,12 @@ func (dr *DescriptorRepository) Create(parent db.Inode, name string, dType db.De
 		return nil, err
 	}
 
-	lastInsertId, err := result.LastInsertId()
+	lastInsertID, err := result.LastInsertId()
 	if err != nil {
 		return nil, err
 	}
 
-	descr, err := dr.FindSingleByInode(db.Inode(lastInsertId))
+	descr, err := dr.FindSingleByInode(db.Inode(lastInsertID))
 	if err != nil {
 		return nil, err
 	}

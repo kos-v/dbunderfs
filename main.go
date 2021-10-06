@@ -17,6 +17,7 @@
 package main
 
 import (
+	_ "github.com/go-sql-driver/mysql"
 	commands "github.com/kos-v/dbunderfs/src/cmd"
 	"os"
 )

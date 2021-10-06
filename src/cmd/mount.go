@@ -58,9 +58,5 @@ func runMount(opts mountOpts) error {
 		return err
 	}
 
-	if err = fs.Mount(opts.point, repositoryRegistry); err != nil {
-		return err
-	}
-
-	return nil
+	return fs.Mount(opts.point, repositoryRegistry)
 }

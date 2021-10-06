@@ -18,7 +18,6 @@ package mysql
 
 import (
 	"database/sql"
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/kos-v/dbunderfs/src/db"
 	"strings"
 	"sync"
