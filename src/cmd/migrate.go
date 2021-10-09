@@ -76,7 +76,7 @@ func runMigrate(opts migrateOpts) error {
 	return nil
 }
 
-func createMigrator(dbInstance db.DBInstance, opts migrateOpts) (*migration.Migrator, error) {
+func createMigrator(dbInstance db.Instance, opts migrateOpts) (*migration.Migrator, error) {
 	commiter, err := dbFactory.CreateMigrationCommiter(dbInstance)
 	if err != nil {
 		return nil, err

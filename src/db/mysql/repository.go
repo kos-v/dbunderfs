@@ -25,7 +25,7 @@ import (
 )
 
 type DataBlockRepository struct {
-	instance db.DBInstance
+	instance db.Instance
 }
 
 func (repo *DataBlockRepository) FindFirst(descr db.DescriptorInterface) (db.DataBlockNodeInterface, error) {
@@ -54,7 +54,7 @@ func (repo *DataBlockRepository) Write(descr db.DescriptorInterface, data *[]byt
 }
 
 type DescriptorRepository struct {
-	instance db.DBInstance
+	instance db.Instance
 }
 
 func (dr *DescriptorRepository) Create(parent db.Inode, name string, dType db.DescriptorType, attrs db.DescriptorAttrs) (db.DescriptorInterface, error) {

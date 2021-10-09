@@ -19,7 +19,7 @@ package mysql
 import "github.com/kos-v/dbunderfs/src/db"
 
 type RepositoryRegistry struct {
-	Instance db.DBInstance
+	Instance db.Instance
 }
 
 func (f *RepositoryRegistry) GetDataBlockRepository() db.DataBlockRepository {
