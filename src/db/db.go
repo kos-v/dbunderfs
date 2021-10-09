@@ -25,7 +25,7 @@ const (
 	RootName string = "/"
 )
 
-type DBInstance interface {
+type Instance interface {
 	Close() error
 	Connect() (*sql.DB, error)
 	Exec(query string, args ...interface{}) (sql.Result, error)

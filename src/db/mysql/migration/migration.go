@@ -23,7 +23,7 @@ import (
 )
 
 type Commiter struct {
-	Instance db.DBInstance
+	Instance db.Instance
 }
 
 func (c *Commiter) Commit(migration *migration.Migration) error {

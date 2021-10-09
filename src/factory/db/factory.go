@@ -32,7 +32,7 @@ func (err *DriverNotFoundError) Error() string {
 	return fmt.Sprintf("driver for database %q not found.", err.driver)
 }
 
-func CreateInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
+func CreateInstance(dsn dsnparser.DSN) (db.Instance, error) {
 	switch dsn.GetScheme() {
 	case "mysql":
 		inst := mysql.Instance{DSN: mysql.DSN{ParsedDSN: dsn}}
@@ -45,7 +45,7 @@ func CreateInstance(dsn dsnparser.DSN) (db.DBInstance, error) {
 	return nil, &DriverNotFoundError{driver: dsn.GetScheme()}
 }
 
-func CreateMigrationCommiter(instance db.DBInstance) (migration.Commiter, error) {
+func CreateMigrationCommiter(instance db.Instance) (migration.Commiter, error) {
 	switch instance.GetDriverName() {
 	case "mysql":
 		return &mysqlMigration.Commiter{Instance: instance}, nil
@@ -54,7 +54,7 @@ func CreateMigrationCommiter(instance db.DBInstance) (migration.Commiter, error)
 	return nil, &DriverNotFoundError{driver: instance.GetDriverName()}
 }
 
-func CreateMigrations(instance db.DBInstance) ([]*migration.Migration, error) {
+func CreateMigrations(instance db.Instance) ([]*migration.Migration, error) {
 	switch instance.GetDriverName() {
 	case "mysql":
 		return mysqlMigrations.Migrations(), nil
@@ -63,7 +63,7 @@ func CreateMigrations(instance db.DBInstance) ([]*migration.Migration, error) {
 	return nil, &DriverNotFoundError{driver: instance.GetDriverName()}
 }
 
-func CreateRepositoryRegistry(instance db.DBInstance) (db.RepositoryRegistry, error) {
+func CreateRepositoryRegistry(instance db.Instance) (db.RepositoryRegistry, error) {
 	switch instance.GetDriverName() {
 	case "mysql":
 		return &mysql.RepositoryRegistry{Instance: instance}, nil

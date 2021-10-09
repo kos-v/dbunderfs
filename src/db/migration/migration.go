@@ -79,7 +79,7 @@ func (m *Migration) OnUp(handler DirectionHandler) *Migration {
 }
 
 type Query struct {
-	Instance db.DBInstance
+	Instance db.Instance
 }
 
 type QueryBag struct {
