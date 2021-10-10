@@ -19,8 +19,8 @@ package db
 import (
 	"github.com/kos-v/dbunderfs/src/container"
 	"github.com/kos-v/dbunderfs/src/db/migration"
-	"github.com/kos-v/dbunderfs/tests/helpers/db"
-	helpers "github.com/kos-v/dbunderfs/tests/helpers/db/migration"
+	"github.com/kos-v/dbunderfs/test/helpers/db"
+	helpers "github.com/kos-v/dbunderfs/test/helpers/db/migration"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 )

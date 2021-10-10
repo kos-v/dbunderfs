@@ -19,8 +19,8 @@ package migration
 import (
 	"github.com/kos-v/dbunderfs/src/container"
 	"github.com/kos-v/dbunderfs/src/db/migration"
-	dbTestHelpers "github.com/kos-v/dbunderfs/tests/helpers/db"
-	"github.com/kos-v/dbunderfs/tests/helpers/factory/db"
+	dbTestHelpers "github.com/kos-v/dbunderfs/test/helpers/db"
+	"github.com/kos-v/dbunderfs/test/helpers/factory/db"
 	"testing"
 )
 

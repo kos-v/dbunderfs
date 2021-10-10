@@ -1,5 +1,5 @@
 .idea/
-tests/.env
+test/.env
 
 coverage.txt
 dbfs
