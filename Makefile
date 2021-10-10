@@ -1,3 +1,5 @@
+.PHONY: build build-debug test test-with-cover test-in-docker clean clean-debug fmt
+
 SRC_PACKAGE="github.com/kos-v/dbunderfs/src"
 TESTS_PATH=./tests
 BINARY=dbfs
