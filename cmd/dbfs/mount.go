@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-package cmd
+package main
 
 import (
 	dbFactory "github.com/kos-v/dbunderfs/internal/factory/db"

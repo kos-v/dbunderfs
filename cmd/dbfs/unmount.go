@@ -14,11 +14,26 @@
    limitations under the License.
 */
 
-package cmd
+package main
 
-// ldflags
-var fBinary string
-var fDebug string
-var fBuild string
-var fBuildDatetime string
-var fRelease string
+import (
+	"bazil.org/fuse"
+	"github.com/spf13/cobra"
+)
+
+func unmountCommand() *cobra.Command {
+	command := &cobra.Command{
+		Use:   "unmount POINT",
+		Short: "Unmounts mount point from the filesystem",
+		Args:  cobra.MinimumNArgs(1),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return runUnmount(args[0])
+		},
+	}
+
+	return command
+}
+
+func runUnmount(point string) error {
+	return fuse.Unmount(point)
+}

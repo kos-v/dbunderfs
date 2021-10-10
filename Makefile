@@ -1,6 +1,6 @@
 .PHONY: build build-debug test test-with-cover test-in-docker clean clean-debug fmt
 
-SRC_PACKAGE="github.com/kos-v/dbunderfs/internal"
+ROOT_PACKAGE=github.com/kos-v/dbunderfs
 TESTS_PATH=./test
 BINARY=dbfs
 BINARY_DEBUG=dbfs-debug
@@ -9,22 +9,22 @@ BUILD=`git rev-parse --short=8 HEAD`
 BUILD_DATETIME=`date +%FT%H:%M:%S`
 
 LDFLAGS=-w -s \
-	-X ${SRC_PACKAGE}/cmd.fBinary=${BINARY} \
-	-X ${SRC_PACKAGE}/cmd.fRelease=${RELEASE} \
-	-X ${SRC_PACKAGE}/cmd.fBuild=${BUILD} \
-	-X ${SRC_PACKAGE}/cmd.fBuildDatetime=${BUILD_DATETIME}
+	-X main.fBinary=${BINARY} \
+	-X main.fRelease=${RELEASE} \
+	-X main.fBuild=${BUILD} \
+	-X main.fBuildDatetime=${BUILD_DATETIME}
 
 build: clean
-	go build -ldflags "${LDFLAGS} -X ${SRC_PACKAGE}/cmd.fBinary=${BINARY} -X ${SRC_PACKAGE}/cmd.fDebug=false" -o ${BINARY} main.go
+	go build -ldflags "${LDFLAGS} -X main.fBinary=${BINARY} -X main.fDebug=false" -o ${BINARY} ${ROOT_PACKAGE}/cmd/dbfs
 
 build-debug: clean-debug
-	go build -ldflags "${LDFLAGS} -X ${SRC_PACKAGE}/cmd.fBinary=${BINARY_DEBUG} -X ${SRC_PACKAGE}/cmd.fDebug=true" -o ${BINARY_DEBUG} main.go
+	go build -ldflags "${LDFLAGS} -X main.fBinary=${BINARY_DEBUG} -X main.fDebug=true" -o ${BINARY_DEBUG} ${ROOT_PACKAGE}/cmd/dbfs
 
 test:
 	go test -v -race ${TESTS_PATH}/...
 
 test-with-cover:
-	go test -v -race -coverprofile=./coverage.txt -covermode=atomic -coverpkg=${SRC_PACKAGE}/... ${TESTS_PATH}/...
+	go test -v -race -coverprofile=./coverage.txt -covermode=atomic -coverpkg=./internal/... ${TESTS_PATH}/...
 
 test-in-docker:
 	rm -f ${TESTS_PATH}/.env

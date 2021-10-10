@@ -14,26 +14,16 @@
    limitations under the License.
 */
 
-package cmd
+package main
 
 import (
-	"bazil.org/fuse"
-	"github.com/spf13/cobra"
+	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
-func unmountCommand() *cobra.Command {
-	command := &cobra.Command{
-		Use:   "unmount POINT",
-		Short: "Unmounts mount point from the filesystem",
-		Args:  cobra.MinimumNArgs(1),
-		RunE: func(cmd *cobra.Command, args []string) error {
-			return runUnmount(args[0])
-		},
+func main() {
+	err := RootCommand().Execute()
+	if err != nil {
+		os.Exit(1)
 	}
-
-	return command
-}
-
-func runUnmount(point string) error {
-	return fuse.Unmount(point)
 }

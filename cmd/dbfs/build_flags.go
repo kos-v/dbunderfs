@@ -16,15 +16,9 @@
 
 package main
 
-import (
-	_ "github.com/go-sql-driver/mysql"
-	commands "github.com/kos-v/dbunderfs/internal/cmd"
-	"os"
-)
-
-func main() {
-	err := commands.RootCommand().Execute()
-	if err != nil {
-		os.Exit(1)
-	}
-}
+// ldflags
+var fBinary string
+var fDebug string
+var fBuild string
+var fBuildDatetime string
+var fRelease string
