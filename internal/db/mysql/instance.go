@@ -18,7 +18,7 @@ package mysql
 
 import (
 	"database/sql"
-	"github.com/kos-v/dbunderfs/src/db"
+	"github.com/kos-v/dbunderfs/internal/db"
 	"strings"
 	"sync"
 )

@@ -17,8 +17,8 @@
 package migration
 
 import (
-	"github.com/kos-v/dbunderfs/src/db"
-	"github.com/kos-v/dbunderfs/src/db/migration"
+	"github.com/kos-v/dbunderfs/internal/db"
+	"github.com/kos-v/dbunderfs/internal/db/migration"
 	"time"
 )
 

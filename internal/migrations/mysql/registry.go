@@ -16,16 +16,10 @@
 
 package mysql
 
-import "github.com/kos-v/dbunderfs/src/db"
+import "github.com/kos-v/dbunderfs/internal/db/migration"
 
-type RepositoryRegistry struct {
-	Instance db.Instance
-}
-
-func (f *RepositoryRegistry) GetDataBlockRepository() db.DataBlockRepository {
-	return &DataBlockRepository{instance: f.Instance}
-}
-
-func (f *RepositoryRegistry) GetDescriptorRepository() db.DescriptorRepository {
-	return &DescriptorRepository{instance: f.Instance}
+func Migrations() []*migration.Migration {
+	return []*migration.Migration{
+		migration000000000000(),
+	}
 }

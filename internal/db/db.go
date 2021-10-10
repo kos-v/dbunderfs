@@ -18,7 +18,7 @@ package db
 
 import (
 	"database/sql"
-	"github.com/kos-v/dbunderfs/src/container"
+	"github.com/kos-v/dbunderfs/internal/container"
 )
 
 const (

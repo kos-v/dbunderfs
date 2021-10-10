@@ -17,8 +17,8 @@
 package migration
 
 import (
-	"github.com/kos-v/dbunderfs/src/container"
-	"github.com/kos-v/dbunderfs/src/db/migration"
+	"github.com/kos-v/dbunderfs/internal/container"
+	"github.com/kos-v/dbunderfs/internal/db/migration"
 )
 
 type CommiterStub struct {

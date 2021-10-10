@@ -17,7 +17,7 @@
 package db
 
 import "testing"
-import "github.com/kos-v/dbunderfs/src/db"
+import "github.com/kos-v/dbunderfs/internal/db"
 
 func TestDataBlockNode_Add(t *testing.T) {
 	tests := []struct {

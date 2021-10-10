@@ -17,8 +17,8 @@
 package cmd
 
 import (
-	dbFactory "github.com/kos-v/dbunderfs/src/factory/db"
-	"github.com/kos-v/dbunderfs/src/fs"
+	dbFactory "github.com/kos-v/dbunderfs/internal/factory/db"
+	"github.com/kos-v/dbunderfs/internal/fs"
 	"github.com/kos-v/dsnparser"
 	"github.com/spf13/cobra"
 )

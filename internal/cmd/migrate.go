@@ -18,10 +18,10 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/kos-v/dbunderfs/src/db"
-	"github.com/kos-v/dbunderfs/src/db/migration"
-	dbFactory "github.com/kos-v/dbunderfs/src/factory/db"
-	log "github.com/kos-v/dbunderfs/src/log"
+	"github.com/kos-v/dbunderfs/internal/db"
+	"github.com/kos-v/dbunderfs/internal/db/migration"
+	dbFactory "github.com/kos-v/dbunderfs/internal/factory/db"
+	log "github.com/kos-v/dbunderfs/internal/log"
 	"github.com/kos-v/dsnparser"
 	"github.com/spf13/cobra"
 )

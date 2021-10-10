@@ -17,7 +17,7 @@
 package container
 
 import "testing"
-import "github.com/kos-v/dbunderfs/src/container"
+import "github.com/kos-v/dbunderfs/internal/container"
 
 func TestCollection_Append(t *testing.T) {
 	toInterfaceList := func(items []string) []interface{} {
