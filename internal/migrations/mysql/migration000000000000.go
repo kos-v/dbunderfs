@@ -57,7 +57,7 @@ func migration000000000000() *migration.Migration {
 			)
 
 			migration.QueryBag.AddQuery(`
-				CREATE PROCEDURE findDescriptorByPath (
+				CREATE PROCEDURE {%prefix%}findDescriptorByPath (
 					IN path VARCHAR(255),
 					IN parent INT,
 					IN callIndex INT
@@ -128,7 +128,7 @@ func migration000000000000() *migration.Migration {
 							LIMIT 1;
 						END IF;
 					ELSE
-						CALL findDescriptorByPath(path, @subpathId, callIndex + 1);
+						CALL {%prefix%}findDescriptorByPath(path, @subpathId, callIndex + 1);
 					END IF;
 				END`,
 			)
@@ -149,7 +149,7 @@ func migration000000000000() *migration.Migration {
 			return nil
 		},
 		func(migration *migration.Migration) error {
-			migration.QueryBag.AddQuery(`DROP PROCEDURE findDescriptorByPath`)
+			migration.QueryBag.AddQuery(`DROP PROCEDURE {%prefix%}findDescriptorByPath`)
 			migration.QueryBag.AddQuery(`DROP TABLE {%prefix%}descriptors`)
 			migration.QueryBag.AddQuery(`DROP TABLE {%prefix%}migrations`)
 
