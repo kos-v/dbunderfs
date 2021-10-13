@@ -28,7 +28,7 @@ func migration000000000000() *migration.Migration {
 		"000000000000",
 		func(migration *migration.Migration) error {
 			migration.QueryBag.AddQuery(`
-				CREATE TABLE {%t_prefix%}migrations (
+				CREATE TABLE {%prefix%}migrations (
 					id varchar(255) NOT NULL,
 					migrated_at int(11) NOT NULL,
 					PRIMARY KEY (id)
@@ -37,7 +37,7 @@ func migration000000000000() *migration.Migration {
 			)
 
 			migration.QueryBag.AddQuery(`
-				CREATE TABLE {%t_prefix%}descriptors (
+				CREATE TABLE {%prefix%}descriptors (
 					inode      bigint(20) unsigned NOT NULL AUTO_INCREMENT,
 					parent     bigint(20) unsigned          DEFAULT NULL,
 					name       varchar(255)        NOT NULL,
@@ -48,9 +48,9 @@ func migration000000000000() *migration.Migration {
 					gid        int(11) unsigned    NOT NULL,
 					fast_block longblob,
 					PRIMARY KEY (inode),
-					UNIQUE INDEX ` + "`UNQ__{%t_prefix%}descriptors__parent-name`" + ` (parent, name),
-					CONSTRAINT ` + "`FK__{%t_prefix%}descriptors-parent__{%t_prefix%}descriptors-inode`" + ` 
-						FOREIGN KEY (parent) REFERENCES {%t_prefix%}descriptors (inode)
+					UNIQUE INDEX ` + "`UNQ__{%prefix%}descriptors__parent-name`" + ` (parent, name),
+					CONSTRAINT ` + "`FK__{%prefix%}descriptors-parent__{%prefix%}descriptors-inode`" + ` 
+						FOREIGN KEY (parent) REFERENCES {%prefix%}descriptors (inode)
 							ON UPDATE CASCADE ON DELETE CASCADE
 				) ENGINE = InnoDB
 				DEFAULT CHARSET = utf8`,
@@ -139,7 +139,7 @@ func migration000000000000() *migration.Migration {
 			}
 
 			migration.QueryBag.AddQuery(fmt.Sprintf(
-				`INSERT INTO {%%t_prefix%%}descriptors (parent, name, type, size, permission,  uid, gid) VALUES (NULL, %q, %q, 0, 755, %s, %s)`,
+				`INSERT INTO {%%prefix%%}descriptors (parent, name, type, size, permission,  uid, gid) VALUES (NULL, %q, %q, 0, 755, %s, %s)`,
 				db.RootName,
 				string(db.DT_Dir),
 				currentUser.Uid,
@@ -150,8 +150,8 @@ func migration000000000000() *migration.Migration {
 		},
 		func(migration *migration.Migration) error {
 			migration.QueryBag.AddQuery(`DROP PROCEDURE findDescriptorByPath`)
-			migration.QueryBag.AddQuery(`DROP TABLE {%t_prefix%}descriptors`)
-			migration.QueryBag.AddQuery(`DROP TABLE {%t_prefix%}migrations`)
+			migration.QueryBag.AddQuery(`DROP TABLE {%prefix%}descriptors`)
+			migration.QueryBag.AddQuery(`DROP TABLE {%prefix%}migrations`)
 
 			return nil
 		})

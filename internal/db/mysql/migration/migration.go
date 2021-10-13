@@ -29,7 +29,7 @@ type Commiter struct {
 func (c *Commiter) Commit(migration *migration.Migration) error {
 	migration.CreatedAt = time.Now().Unix()
 
-	query := `INSERT INTO {%t_prefix%}migrations (id, migrated_at) VALUES (?, ?)`
+	query := `INSERT INTO {%prefix%}migrations (id, migrated_at) VALUES (?, ?)`
 	_, err := c.Instance.Exec(query, migration.Id, migration.CreatedAt)
 	if err != nil {
 		return err
@@ -48,7 +48,7 @@ func (c *Commiter) IsCommited(migration *migration.Migration) (bool, error) {
 	}
 
 	var isExistsMigration int
-	row := c.Instance.QueryRow("SELECT COUNT(*) FROM {%t_prefix%}migrations WHERE id = ?", migration.Id)
+	row := c.Instance.QueryRow("SELECT COUNT(*) FROM {%prefix%}migrations WHERE id = ?", migration.Id)
 	err := row.Scan(&isExistsMigration)
 	if err != nil {
 		return false, err
@@ -66,7 +66,7 @@ func (c *Commiter) Rollback(migration *migration.Migration) error {
 		return err
 	}
 
-	_, err := c.Instance.Exec("DELETE FROM {%t_prefix%}migrations WHERE id = ?", migration.Id)
+	_, err := c.Instance.Exec("DELETE FROM {%prefix%}migrations WHERE id = ?", migration.Id)
 	return err
 }
 
@@ -74,7 +74,7 @@ func (c *Commiter) isExistsCommitTable() (bool, error) {
 	var isExists int
 
 	query := `SELECT COUNT(*) FROM information_schema.tables 
-		WHERE table_schema = ? AND table_name = '{%t_prefix%}migrations' 
+		WHERE table_schema = ? AND table_name = '{%prefix%}migrations' 
 		LIMIT 1`
 	row := c.Instance.QueryRow(query, c.Instance.GetDSN().GetDatabase())
 
