@@ -31,7 +31,6 @@ type Instance interface {
 	Exec(query string, args ...interface{}) (sql.Result, error)
 	GetDriverName() string
 	GetDSN() DSN
-	GetPool() *sql.DB
 	HasConnection() bool
 	Reconnect() (*sql.DB, error)
 	Query(query string, args ...interface{}) (*sql.Rows, error)

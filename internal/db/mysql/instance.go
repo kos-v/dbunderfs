@@ -69,10 +69,6 @@ func (inst *Instance) GetDriverName() string {
 	return "mysql"
 }
 
-func (inst *Instance) GetPool() *sql.DB {
-	return inst.pool
-}
-
 func (inst *Instance) HasConnection() bool {
 	if inst.pool != nil {
 		if err := inst.pool.Ping(); err == nil {
