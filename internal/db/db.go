@@ -39,7 +39,7 @@ type Instance interface {
 
 type DSN interface {
 	GetDatabase() string
-	GetTablePrefix() string
+	GetPrefix() string
 	ToString() string
 }
 

@@ -26,11 +26,11 @@ func (d *DSN) GetDatabase() string {
 	return d.ParsedDSN.GetPath()
 }
 
-func (d *DSN) GetTablePrefix() string {
-	if !d.ParsedDSN.HasParam("tblprefix") {
+func (d *DSN) GetPrefix() string {
+	if !d.ParsedDSN.HasParam("prefix") {
 		return ""
 	}
-	return d.ParsedDSN.GetParam("tblprefix")
+	return d.ParsedDSN.GetParam("prefix")
 }
 
 func (d *DSN) ToString() string {

@@ -127,5 +127,5 @@ func (inst *Instance) generatePool(dsn string) (*sql.DB, error) {
 
 func (inst *Instance) prepareQuery(query string) string {
 	// TODO: Move to a replace function
-	return strings.Replace(query, "{%t_prefix%}", inst.DSN.GetTablePrefix(), -1)
+	return strings.Replace(query, "{%prefix%}", inst.DSN.GetPrefix(), -1)
 }
