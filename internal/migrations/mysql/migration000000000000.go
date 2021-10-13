@@ -90,9 +90,9 @@ func migration000000000000() *migration.Migration {
 				
 					SET @subpathId := NULL;
 					IF @pathIsRoot = TRUE THEN
-						SELECT inode INTO @subpathId FROM descriptors WHERE parent IS NULL AND name = @subpath LIMIT 1;
+						SELECT inode INTO @subpathId FROM {%prefix%}descriptors WHERE parent IS NULL AND name = @subpath LIMIT 1;
 					ELSE
-						SELECT inode INTO @subpathId FROM descriptors WHERE parent = parent AND name = @subpath LIMIT 1;
+						SELECT inode INTO @subpathId FROM {%prefix%}descriptors WHERE parent = parent AND name = @subpath LIMIT 1;
 					END IF;
 				
 					IF @subpathId IS NULL THEN
@@ -109,7 +109,7 @@ func migration000000000000() *migration.Migration {
 								   permission,
 								   uid,
 								   gid
-							FROM descriptors
+							FROM {%prefix%}descriptors
 							WHERE parent IS NULL
 							  AND name = @subpath
 							LIMIT 1;
@@ -122,7 +122,7 @@ func migration000000000000() *migration.Migration {
 								   permission,
 								   uid,
 								   gid
-							FROM descriptors
+							FROM {%prefix%}descriptors
 							WHERE parent = parent
 							  AND name = @subpath
 							LIMIT 1;
