@@ -29,7 +29,7 @@ type DataBlockRepository struct {
 }
 
 func (repo *DataBlockRepository) FindFirst(descr db.DescriptorInterface) (db.DataBlockNodeInterface, error) {
-	row := repo.instance.QueryRow(`SELECT fast_block FROM descriptors WHERE inode = ?`, descr.GetInode())
+	row := repo.instance.QueryRow(`SELECT fast_block FROM {%prefix%}descriptors WHERE inode = ?`, descr.GetInode())
 
 	dataBlock := db.DataBlockNode{Data: []byte{}}
 	err := row.Scan(&dataBlock.Data)
@@ -44,7 +44,7 @@ func (repo *DataBlockRepository) FindFirst(descr db.DescriptorInterface) (db.Dat
 }
 
 func (repo *DataBlockRepository) Write(descr db.DescriptorInterface, data *[]byte) error {
-	_, err := repo.instance.Exec(`UPDATE descriptors SET fast_block = ?, size = ? WHERE inode = ?`,
+	_, err := repo.instance.Exec(`UPDATE {%prefix%}descriptors SET fast_block = ?, size = ? WHERE inode = ?`,
 		*data,
 		len(*data),
 		descr.GetInode(),
@@ -59,7 +59,7 @@ type DescriptorRepository struct {
 
 func (dr *DescriptorRepository) Create(parent db.Inode, name string, dType db.DescriptorType, attrs db.DescriptorAttrs) (db.DescriptorInterface, error) {
 	sqlStatement := `
-	INSERT INTO descriptors (parent, name, type, size, permission,  uid, gid)
+	INSERT INTO {%prefix%}descriptors (parent, name, type, size, permission,  uid, gid)
 	VALUES (?, ?, ?, ?, ?, ?, ?)`
 
 	result, err := dr.instance.Exec(sqlStatement,
@@ -91,7 +91,7 @@ func (dr *DescriptorRepository) Create(parent db.Inode, name string, dType db.De
 func (dr *DescriptorRepository) FindChildrenByInode(parentInode db.Inode) (container.CollectionInterface, error) {
 	rows, err := dr.instance.Query(`
 		SELECT inode, parent, name, type, size, permission,  uid, gid 
-		FROM descriptors
+		FROM {%prefix%}descriptors
 		WHERE parent = ?
 		ORDER BY type, name`, parentInode,
 	)
@@ -133,7 +133,7 @@ func (dr *DescriptorRepository) FindRoot() (db.DescriptorInterface, error) {
 func (dr *DescriptorRepository) FindSingleByInode(inode db.Inode) (db.DescriptorInterface, error) {
 	row := dr.instance.QueryRow(`
 		SELECT inode, parent, name, type, size, permission,  uid, gid 
-		FROM descriptors 
+		FROM {%prefix%}descriptors 
 		WHERE inode = ?`, inode,
 	)
 
@@ -151,7 +151,7 @@ func (dr *DescriptorRepository) FindSingleByInode(inode db.Inode) (db.Descriptor
 func (dr *DescriptorRepository) FindSingleByName(parent db.Inode, target string) (db.DescriptorInterface, error) {
 	row := dr.instance.QueryRow(`
 		SELECT inode, parent, name, type, size, permission,  uid, gid
-		FROM descriptors 
+		FROM {%prefix%}descriptors 
 		WHERE parent = ?  AND name = ?`, parent, target,
 	)
 
@@ -185,7 +185,7 @@ func (dr *DescriptorRepository) RemoveByName(parent db.Inode, name string) error
 		return fmt.Errorf("Node %s was not found in parent %d", name, parent)
 	}
 
-	_, err = dr.instance.Exec("DELETE FROM descriptors WHERE parent = ?  AND name = ?", parent, name)
+	_, err = dr.instance.Exec("DELETE FROM {%prefix%}descriptors WHERE parent = ?  AND name = ?", parent, name)
 	return err
 }
 
