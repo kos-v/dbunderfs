@@ -113,7 +113,7 @@ func (dr *DescriptorRepository) FindChildrenByInode(parentInode db.Inode) (conta
 }
 
 func (dr *DescriptorRepository) FindRoot() (db.DescriptorInterface, error) {
-	row := dr.instance.QueryRow(`CALL findDescriptorByPath(?, NULL, 1)`, db.RootName)
+	row := dr.instance.QueryRow(`CALL {%prefix%}findDescriptorByPath(?, NULL, 1)`, db.RootName)
 
 	descr, err := dr.hydrateDescriptor(row)
 	if err != nil {
