@@ -139,9 +139,10 @@ func migration000000000000() *migration.Migration {
 			}
 
 			migration.QueryBag.AddQuery(fmt.Sprintf(
-				`INSERT INTO {%%prefix%%}descriptors (parent, name, type, size, permission,  uid, gid) VALUES (NULL, %q, %q, 0, 755, %s, %s)`,
+				`INSERT INTO {%%prefix%%}descriptors (parent, name, type, size, permission,  uid, gid) VALUES (NULL, %q, %q, 0, %q, %s, %s)`,
 				db.RootName,
 				string(db.DT_Dir),
+				"0775",
 				currentUser.Uid,
 				currentUser.Gid,
 			))
