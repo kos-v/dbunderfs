@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"github.com/kos-v/dbunderfs/internal/db"
 	log "github.com/sirupsen/logrus"
+	"io/fs"
 )
 
 type RootNotFoundError struct{ err string }
@@ -72,3 +73,9 @@ func (f *FS) Root() (fuseFS.Node, error) {
 }
 
 var _ fuseFS.FS = (*FS)(nil)
+
+type Permission fs.FileMode
+
+func (p Permission) ToOctalString() string {
+	return fmt.Sprintf("%#o", p)
+}

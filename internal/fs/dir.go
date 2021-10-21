@@ -120,10 +120,11 @@ func (d *Dir) Mkdir(ctx context.Context, req *fuse.MkdirRequest) (fuseFS.Node, e
 		return nil, fmt.Errorf(msg)
 	}
 
+	perm := Permission(req.Mode.Perm())
 	newDescr, err := repo.Create(d.descriptor.GetInode(), req.Name, db.DT_Dir, db.DescriptorAttrs{
 		GID:        req.Gid,
 		UID:        req.Uid,
-		Permission: "0755",
+		Permission: perm.ToOctalString(),
 		Size:       0,
 	})
 	if err != nil {
@@ -154,10 +155,11 @@ func (d *Dir) Create(ctx context.Context, req *fuse.CreateRequest, resp *fuse.Cr
 		return nil, nil, fmt.Errorf(msg)
 	}
 
+	perm := Permission(req.Mode.Perm())
 	newDescr, err := repo.Create(d.descriptor.GetInode(), req.Name, db.DT_File, db.DescriptorAttrs{
 		GID:        req.Gid,
 		UID:        req.Uid,
-		Permission: "0644",
+		Permission: perm.ToOctalString(),
 		Size:       0,
 	})
 	if err != nil {
