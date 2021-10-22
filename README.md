@@ -7,11 +7,14 @@ In development of the first version
 
 #### Building
 `git clone https://github.com/kos-v/dbunderfs.git`
+
 `cd dbunderfs`
+
 `make build`
 
 #### Installation
 `cp dbfs /usr/local/bin`
+
 `dbfs migrate up "mysql://user:pass@127.0.0.1/db"`
 
 #### Mount/Unmount
